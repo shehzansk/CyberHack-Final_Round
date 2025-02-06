@@ -7,7 +7,7 @@ function Header({ activeContainer }) {
     <header className="bg-dark-800 shadow-lg border-b border-dark-700 p-4">
       <div className="container mx-auto flex justify-between items-center">
         <Link to="/" className="flex items-center space-x-2">
-          <span className="font-semibold text-black">News Guardian</span>
+          <span className="font-semibold text-black">Fake News</span>
         </Link>
 
         <nav className="flex space-x-6 items-center">
