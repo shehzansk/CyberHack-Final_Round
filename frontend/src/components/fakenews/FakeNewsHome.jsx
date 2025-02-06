@@ -3,8 +3,8 @@ import Header from './Header';
 import { Check, X } from 'lucide-react';
 import axios from 'axios';
 
-function Home() {
-  document.title = 'News Guardian | Home';
+function FakeNewsHome() {
+  document.title = 'Fake News | Home';
   let stage = 1;
 
   const [liveNewsData, setLiveNewsData] = useState([]);
@@ -136,4 +136,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default FakeNewsHome;

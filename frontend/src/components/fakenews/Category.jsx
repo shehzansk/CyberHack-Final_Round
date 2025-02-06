@@ -6,7 +6,7 @@ import Header from "./Header";
 import axios from "axios";
 
 function CheckByTitle() {
-  document.title = "News Guardian | Check news by title";
+  document.title = "Fake News | Check news by title";
   const [inputNewsTitle, setNewsTitle] = useState("");
   const [predictedValue, setPredictedValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
