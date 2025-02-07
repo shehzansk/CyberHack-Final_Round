@@ -1,23 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ShieldCheckIcon, NewspaperIcon, Camera } from 'lucide-react';
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 
 const HomePage = () => {
     const navigate = useNavigate();
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const auth = getAuth();
 
-    // Check if user is authenticated (e.g., from localStorage)
+    // Check authentication status
     useEffect(() => {
-        const userToken = localStorage.getItem('authToken'); // Assume authToken is stored on login
-        setIsAuthenticated(!userToken); // Convert to boolean
-    }, []);
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            setIsAuthenticated(!!user);
+        });
+        return () => unsubscribe(); // Cleanup on unmount
+    }, [auth]);
 
     // Handle logout
-    const handleSignOut = () => {
-        localStorage.removeItem('authToken'); // Remove token
-        setIsAuthenticated(false);
-        navigate('/signin'); // Redirect to login page
+    const handleSignOut = async () => {
+        try {
+            await signOut(auth);
+            navigate('/signin');
+        } catch (error) {
+            console.error('Error signing out:', error.message);
+        }
     };
+    const handleButtonSignin = () => {
+        alert("Please Sign in to continue");
+        navigate('/signin');
+    }
 
     const features = [
         {
@@ -25,21 +36,18 @@ const HomePage = () => {
             title: "Deepfake Video Detection",
             description: "Advanced AI algorithms to detect manipulated video content with precision.",
             action: () => navigate('/deepfake-videos'),
-            color: "indigo"
         },
         {
             icon: <Camera className="w-16 h-16 text-teal-500 mx-auto" />,
             title: "Deepfake Image Detection",
             description: "Powerful image analysis to identify AI-generated visual deceptions.",
             action: () => navigate('/deepfake-images'),
-            color: "teal"
         },
         {
             icon: <NewspaperIcon className="w-16 h-16 text-emerald-500 mx-auto" />,
             title: "Fake News Detection",
             description: "Real-time verification of news authenticity using cutting-edge AI.",
             action: () => navigate('/fakenews'),
-            color: "emerald"
         }
     ];
 
@@ -62,7 +70,7 @@ const HomePage = () => {
                                 {link}
                             </a>
                         ))}
-                        <div className="space-x-3">
+                        <div>
                             {isAuthenticated ? (
                                 <button 
                                     onClick={handleSignOut} 
@@ -115,13 +123,24 @@ const HomePage = () => {
                         <p className="text-gray-600 mb-6">
                             {feature.description}
                         </p>
-                        <button 
+                        {isAuthenticated?(
+                            <button 
                             onClick={feature.action}
-                            className={`px-6 py-3 bg-blue-500 text-white rounded-lg 
-                                hover:bg-blue-600 transition-colors group-hover:scale-105`}
+                            className="px-6 py-3 bg-blue-500 text-white rounded-lg 
+                                hover:bg-blue-600 transition-colors group-hover:scale-105"
                         >
                             Detect Now
                         </button>
+                        ):(
+                            <button 
+                            onClick={handleButtonSignin}
+                            className="px-6 py-3 bg-blue-500 text-white rounded-lg 
+                                hover:bg-blue-600 transition-colors group-hover:scale-105"
+                        >
+                            Detect Now
+                        </button>
+                        )};
+                        
                     </div>
                 ))}
             </main>
