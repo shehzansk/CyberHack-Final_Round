@@ -1,79 +1,145 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ShieldCheckIcon, NewspaperIcon, Camera } from 'lucide-react';
 
 const HomePage = () => {
     const navigate = useNavigate();
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-    const handleFakeNewsClick = () => {
-        navigate('/fakenews');
+    // Check if user is authenticated (e.g., from localStorage)
+    useEffect(() => {
+        const userToken = localStorage.getItem('authToken'); // Assume authToken is stored on login
+        setIsAuthenticated(!userToken); // Convert to boolean
+    }, []);
+
+    // Handle logout
+    const handleSignOut = () => {
+        localStorage.removeItem('authToken'); // Remove token
+        setIsAuthenticated(false);
+        navigate('/signin'); // Redirect to login page
     };
-    
-    const handleDeepFakeClick = () => {
-        navigate('/deepfake');
-    };
+
+    const features = [
+        {
+            icon: <Camera className="w-16 h-16 text-indigo-500 mx-auto" />,
+            title: "Deepfake Video Detection",
+            description: "Advanced AI algorithms to detect manipulated video content with precision.",
+            action: () => navigate('/deepfake-videos'),
+            color: "indigo"
+        },
+        {
+            icon: <Camera className="w-16 h-16 text-teal-500 mx-auto" />,
+            title: "Deepfake Image Detection",
+            description: "Powerful image analysis to identify AI-generated visual deceptions.",
+            action: () => navigate('/deepfake-images'),
+            color: "teal"
+        },
+        {
+            icon: <NewspaperIcon className="w-16 h-16 text-emerald-500 mx-auto" />,
+            title: "Fake News Detection",
+            description: "Real-time verification of news authenticity using cutting-edge AI.",
+            action: () => navigate('/fakenews'),
+            color: "emerald"
+        }
+    ];
 
     return (
-        <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-50 to-purple-100">
-            {/* Header */}
-            <header className="bg-white shadow-lg">
-                <div className="container mx-auto px-6 py-4">
-                    <div className="flex items-center justify-between">
-                        <div className="text-2xl font-bold text-gray-800">BelieveMe</div>
-                        <nav className="flex space-x-4">
-                            <a href="#" className="text-gray-700 hover:text-purple-600">Home</a>
-                            <a href="#" className="text-gray-700 hover:text-purple-600">Features</a>
-                            <a href="#" className="text-gray-700 hover:text-purple-600">Contact</a>
-                        </nav>
+        <div className="min-h-screen bg-gray-50 text-gray-900">
+            {/* Navigation */}
+            <nav className="fixed w-full z-20 bg-white/80 backdrop-blur-md shadow-sm">
+                <div className="container mx-auto px-6 py-4 flex justify-between items-center">
+                    <div className="flex items-center space-x-3">
+                        <ShieldCheckIcon className="w-8 h-8 text-indigo-600" />
+                        <span className="text-2xl font-bold text-indigo-800">Fake Buster</span>
+                    </div>
+                    <div className="flex space-x-6">
+                        {['Home', 'Features', 'About', 'Contact'].map(link => (
+                            <a 
+                                key={link} 
+                                href="#" 
+                                className="text-gray-600 hover:text-indigo-600 transition-colors"
+                            >
+                                {link}
+                            </a>
+                        ))}
+                        <div className="space-x-3">
+                            {isAuthenticated ? (
+                                <button 
+                                    onClick={handleSignOut} 
+                                    className="px-2 py-[2px] text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors"
+                                >
+                                    Sign Out
+                                </button>
+                            ) : (
+                                <>
+                                    <a 
+                                        href="/signin" 
+                                        className="px-4 py-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                                    >
+                                        Sign In
+                                    </a>
+                                    <a 
+                                        href="/signup" 
+                                        className="px-4 py-2 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors"
+                                    >
+                                        Sign Up
+                                    </a>
+                                </>
+                            )}
+                        </div>
                     </div>
                 </div>
+            </nav>
+
+            {/* Hero Section */}
+            <header className="pt-24 pb-16 px-6 text-center bg-gradient-to-br from-indigo-50 to-teal-50">
+                <h1 className="text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-teal-500 mb-6">
+                    Uncover the Truth
+                </h1>
+                <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-12">
+                    Protect yourself from digital misinformation with our advanced AI-powered detection technologies.
+                </p>
             </header>
 
-            {/* Main Content */}
-            <main className="flex-grow container mx-auto px-6 py-12">
-                <div className="text-center mb-16">
-                    <h1 className="text-5xl font-bold text-gray-800 mb-4">Welcome to BelieveMe</h1>
-                    <p className="text-xl text-gray-600">Empowering you to detect deepfakes and fake news with cutting-edge AI technology.</p>
-                </div>
-
-                {/* Features Section */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {/* Deepfake Detection Feature */}
-                    <div className="bg-white p-8 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-                        <div className="text-center">
-                            <div className="text-4xl text-purple-600 mb-4">🤖</div>
-                            <h2 className="text-2xl font-bold text-gray-800 mb-4">Deepfake Detection</h2>
-                            <p className="text-gray-600">Our advanced AI algorithms can detect deepfake videos and images with high accuracy, helping you identify manipulated media.</p>
-                            <button onClick={handleDeepFakeClick} className="mt-6 px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors duration-300">
-                                Get Started
-                            </button>
-                        </div>
+            {/* Features Grid */}
+            <main className="container mx-auto px-6 grid md:grid-cols-3 gap-8 -mt-12">
+                {features.map((feature, index) => (
+                    <div 
+                        key={index} 
+                        className="bg-white rounded-2xl p-8 text-center shadow-lg hover:shadow-xl transition-all group"
+                    >
+                        {feature.icon}
+                        <h2 className="text-2xl font-bold mt-6 mb-4 text-gray-800">
+                            {feature.title}
+                        </h2>
+                        <p className="text-gray-600 mb-6">
+                            {feature.description}
+                        </p>
+                        <button 
+                            onClick={feature.action}
+                            className={`px-6 py-3 bg-blue-500 text-white rounded-lg 
+                                hover:bg-blue-600 transition-colors group-hover:scale-105`}
+                        >
+                            Detect Now
+                        </button>
                     </div>
-
-                    {/* Fake News Detection Feature */}
-                    <div className="bg-white p-8 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-                        <div className="text-center">
-                            <div className="text-4xl text-blue-600 mb-4">📰</div>
-                            <h2 className="text-2xl font-bold text-gray-800 mb-4">Fake News Detection</h2>
-                            <p className="text-gray-600">Stay informed with our fake news detection system that analyzes and verifies the authenticity of news articles in real-time.</p>
-                            <button
-                                onClick={handleFakeNewsClick}
-                                className="mt-6 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300"
-                            >
-                                Get Started
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                ))}
             </main>
 
             {/* Footer */}
-            <footer className="bg-gray-800 text-white py-8">
+            <footer className="mt-16 bg-gray-900 text-white py-12">
                 <div className="container mx-auto px-6 text-center">
-                    <p className="text-gray-400">© 2025 BelieveMe. All rights reserved.</p>
-                    <div className="mt-4 flex justify-center space-x-4">
-                        <a href="#" className="text-gray-400 hover:text-white">Privacy Policy</a>
-                        <a href="#" className="text-gray-400 hover:text-white">Terms of Service</a>
-                        <a href="#" className="text-gray-400 hover:text-white">Contact Us</a>
+                    <p className="text-gray-400">© 2025 Fake Buster. Protecting Truth in the Digital Age.</p>
+                    <div className="mt-6 flex justify-center space-x-6">
+                        {['Privacy', 'Terms', 'Contact'].map(link => (
+                            <a 
+                                key={link} 
+                                href="#" 
+                                className="text-gray-500 hover:text-white transition-colors"
+                            >
+                                {link}
+                            </a>
+                        ))}
                     </div>
                 </div>
             </footer>

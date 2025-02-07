@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Header from './Header';
-import { Check, X } from 'lucide-react';
+import { Check, X, Copy } from 'lucide-react';
 import axios from 'axios';
 
 function FakeNewsHome() {
-  document.title = 'Fake News | Home';
+  document.title = 'Fake News';
   let stage = 1;
 
   const [liveNewsData, setLiveNewsData] = useState([]);
@@ -44,69 +44,120 @@ function FakeNewsHome() {
     return () => clearInterval(intervalId);
   }, []);
 
-  const NewsCard = ({ news, index }) => (
-    <div className="border border-dark-600 rounded-lg overflow-hidden mb-4 shadow-lg transform hover:scale-105 transition-transform duration-300">
-      {news.img_url !== 'None' && (
-        <img
-          src={news.img_url}
-          alt={`News ${index}`}
-          className="w-full h-48 object-cover"
-        />
-      )}
-      <div className="p-4">
-        <h5 className="text-lg font-semibold text-black mb-2">{news.title}</h5>
-        <p className="text-black mb-2">
-          {new Date(news.publication_date).toLocaleString()}
-        </p>
-        <div>
-          {news.prediction ? (
-            <div className="text-green-400 flex items-center">
-              <Check className="mr-2" /> Predicted as Real News
-            </div>
-          ) : (
-            <div className="text-red-400 flex items-center">
-              <X className="mr-2" /> Predicted as Fake News
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
+  const NewsCard = ({ news, index, variant = 'default' }) => {
+    const [copied, setCopied] = useState(false);
+    const isSmall = variant === 'small';
 
-  return (
-    <div className="bg-dark-800 min-h-screen text-black">
-      <Header activeContainer={stage} />
-      <div className="bg-white container mx-auto px-4 py-8">
-        {liveNewsData.length >= 10 ? (
-          <div className="space-y-8">
-            <div className="grid md:grid-cols-2 gap-6">
-              <NewsCard news={liveNewsData[0]} index={0} />
-              <NewsCard news={liveNewsData[1]} index={1} />
-            </div>
+    const handleCopyTitle = () => {
+      navigator.clipboard.writeText(news.title)
+        .then(() => {
+          setCopied(true);
+          setTimeout(() => setCopied(false), 2000);
+        })
+        .catch(err => {
+          console.error('Failed to copy text: ', err);
+        });
+    };
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {liveNewsData.slice(2, 6).map((news, index) => (
-                <NewsCard key={index} news={news} index={index + 2} />
-              ))}
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {liveNewsData.slice(6, 10).map((news, index) => (
-                <NewsCard key={index} news={news} index={index + 6} />
-              ))}
+    return (
+      <div className={`
+      bg-white rounded-2xl overflow-hidden shadow-lg 
+      transform transition-all duration-300 hover:scale-105 hover:shadow-xl
+      relative
+      ${isSmall ? 'h-full' : ''}
+    `}>
+        {news.img_url !== 'None' && (
+          <div className="relative overflow-hidden">
+            <img
+              src={news.img_url}
+              alt={`News ${index}`}
+              className={`w-full object-cover ${isSmall ? 'h-32' : 'h-48'}`}
+            />
+            <div className="absolute top-2 right-2 bg-white/80 rounded-full p-1">
+              {news.prediction ? (
+                <Check className="w-5 h-5 text-green-500" />
+              ) : (
+                <X className="w-5 h-5 text-red-500" />
+              )}
             </div>
           </div>
-        ) : (
-          <p className="text-center text-black">Not enough data to display :(</p>
+        )}
+        <div className={`p-4 ${isSmall ? 'p-3' : ''} relative`}>
+          <h5 className={`font-bold text-gray-800 ${isSmall ? 'text-sm' : 'text-lg'} mb-2`}>
+            {news.title}
+          </h5>
+          <div className="flex items-center text-gray-500 text-sm space-x-2">
+            <div className="w-4 h-4" />
+            <span>{new Date(news.publication_date).toLocaleString()}</span>
+          </div>
+
+          {/* Copy Title Button */}
+          <button
+            onClick={handleCopyTitle}
+            className="absolute bottom-2 left-2 text-gray-500 hover:text-gray-800 transition-colors"
+            title="Copy Title"
+          >
+            <Copy className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* Copy Confirmation Toast */}
+        {copied && (
+          <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 
+          bg-green-500 text-white text-xs px-2 py-1 rounded-full
+          animate-bounce">
+            Copied!
+          </div>
+        )}
+      </div>
+    );
+  };
+
+
+  return (
+    <div className="bg-gray-50 min-h-screen text-gray-900">
+      <Header activeContainer={stage} />
+
+      <div className="container mx-auto px-4 py-8 mt-15">
+        {/* Hero Section */}
+        {liveNewsData.length >= 10 && (
+          <div className="mb-12">
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* Featured Large Card */}
+              <div className="md:col-span-1">
+                <NewsCard news={liveNewsData[0]} index={0} />
+              </div>
+
+              {/* Secondary Large Card */}
+              <div className="md:col-span-1">
+                <NewsCard news={liveNewsData[1]} index={1} />
+              </div>
+            </div>
+
+            {/* Trending News Grid */}
+            <div className="mt-8">
+              <div className="flex items-center mb-4">
+                <div className="w-6 h-6 mr-2 text-indigo-600" />
+                <h2 className="text-2xl font-bold text-gray-800">Trending News</h2>
+              </div>
+              <div className="grid md:grid-cols-4 gap-4">
+                {liveNewsData.slice(2, 6).map((news, index) => (
+                  <NewsCard key={index} news={news} index={index + 2} variant="small" />
+                ))}
+              </div>
+            </div>
+          </div>
         )}
 
         {/* Must See Section */}
-        <div className="mt-12 mb-6">
-          <h3 className="text-2xl font-bold text-black mb-4">Must See</h3>
-          <hr className="border-dark-600 mb-6" />
+        <div className="mt-12 mb-8">
+          <div className="flex items-center mb-6">
+            <div className="w-6 h-6 mr-2 text-yellow-500" />
+            <h3 className="text-2xl font-bold text-gray-800">Must See</h3>
+          </div>
 
           {mustSeeNews.length >= 4 ? (
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid md:grid-cols-4 gap-6">
               {mustSeeNews.slice(0, 4).map((news, index) => (
                 <NewsCard key={index} news={news} index={index} />
               ))}
@@ -117,12 +168,14 @@ function FakeNewsHome() {
         </div>
 
         {/* All News Section */}
-        <div className="mt-12 mb-6">
-          <h3 className="text-2xl font-bold text-black mb-4">All News</h3>
-          <hr className="border-dark-600 mb-6" />
+        <div className="mt-12 mb-8">
+          <div className="flex items-center mb-6">
+            <div className="w-6 h-6 mr-2 text-green-600" />
+            <h3 className="text-2xl font-bold text-gray-800">All News</h3>
+          </div>
 
           {allNews.length >= 4 ? (
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid md:grid-cols-4 gap-6">
               {allNews.slice(0, 4).map((news, index) => (
                 <NewsCard key={index} news={news} index={index} />
               ))}
