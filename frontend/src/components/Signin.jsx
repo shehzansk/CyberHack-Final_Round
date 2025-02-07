@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { auth } from "./firebase"; // Firebase configuration
-import { signInWithEmailAndPassword, signOut } from "./firebase";
+import { onAuthStateChanged, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Lock, Mail } from "lucide-react";
 
@@ -10,6 +10,14 @@ const SignIn = () => {
     const [password, setPassword] = useState("");
     const [user, setUser] = useState(null);
     const navigate = useNavigate();
+
+    // Track authentication state
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+            setUser(currentUser);
+        });
+        return () => unsubscribe(); // Cleanup subscription on unmount
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -32,14 +40,14 @@ const SignIn = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100  p-10">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100 p-10">
             <div className="w-full max-w-md bg-white backdrop-blur-md rounded-xl shadow-xl p-8 space-y-6 border border-violet-300">
                 {user ? (
-                    <div className="text-center space-y-4 text-gray-200">
+                    <div className="text-center space-y-4 text-gray-800">
                         <p className="text-lg font-semibold">Welcome, {user.email}</p>
                         <button
                             onClick={handleSignOut}
-                            className="w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition duration-300">
+                            className="w-full bg-red-600 text-white py-2 px-2 rounded-lg hover:bg-red-700 transition duration-300">
                             Sign Out
                         </button>
                     </div>
@@ -89,12 +97,10 @@ const SignIn = () => {
                                 Sign In
                             </button>
                         </form>
-                        <div className="text-black text-center py-2"><span>Don't have an account? </span><a
-                            href="/signup"
-
-                        >
-                            Sign Up
-                        </a></div>
+                        <div className="text-black text-center py-2">
+                            <span>Don't have an account? </span>
+                            <a href="/signup" className="text-blue-500 hover:underline">Sign Up</a>
+                        </div>
                     </>
                 )}
             </div>
