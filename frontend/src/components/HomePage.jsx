@@ -51,7 +51,7 @@ const HomePage = () => {
             <nav className="fixed w-full z-20 bg-white/80 backdrop-blur-md shadow-sm">
                 <div className="container mx-auto px-6 py-4 flex justify-between items-center">
                     <div className="flex items-center space-x-3">
-                        <ShieldCheckIcon className="w-8 h-8 text-indigo-600" />
+                        {/* <ShieldCheckIcon className="w-8 h-8 text-indigo-600" /> */}
                         <span className="text-2xl font-bold text-indigo-800">Fake Buster</span>
                     </div>
                     <div className="flex space-x-6">
