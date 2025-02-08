@@ -38,12 +38,6 @@ const HomePage = () => {
             action: () => navigate('/deepfake-videos'),
         },
         {
-            icon: <Camera className="w-16 h-16 text-teal-500 mx-auto" />,
-            title: "Deepfake Image Detection",
-            description: "Powerful image analysis to identify AI-generated visual deceptions.",
-            action: () => navigate('/deepfake-images'),
-        },
-        {
             icon: <NewspaperIcon className="w-16 h-16 text-emerald-500 mx-auto" />,
             title: "Fake News Detection",
             description: "Real-time verification of news authenticity using cutting-edge AI.",
@@ -110,7 +104,7 @@ const HomePage = () => {
             </header>
 
             {/* Features Grid */}
-            <main className="container mx-auto px-6 grid md:grid-cols-3 gap-8 -mt-12">
+            <main className="container mx-auto px-6 grid md:grid-cols-2 gap-8 -mt-12">
                 {features.map((feature, index) => (
                     <div 
                         key={index} 

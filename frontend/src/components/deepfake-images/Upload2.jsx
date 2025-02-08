@@ -25,7 +25,7 @@ const Upload2 = () => {
 
         setLoading(true);
         try {
-            const response = await axios.post("http://localhost:5000/Detect", formData, {
+            const response = await axios.post("http://localhost:5000/detect_image", formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
