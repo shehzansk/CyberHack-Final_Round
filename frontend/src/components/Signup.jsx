@@ -36,7 +36,7 @@ const Signup = () => {
       const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
       console.log("User signed up:", userCredential.user);
       alert("Signup Successful!");
-      navigate("/dashboard"); // Redirect after signup
+      navigate("/"); // Redirect after signup
     } catch (error) {
       console.error("Signup Error:", error.message);
       setError(error.message);
