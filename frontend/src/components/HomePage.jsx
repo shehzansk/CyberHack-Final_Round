@@ -56,9 +56,9 @@ const HomePage = () => {
                     </div>
                     <div className="flex space-x-6">
                         {['Home', 'Features', 'About', 'Contact'].map(link => (
-                            <a 
-                                key={link} 
-                                href="#" 
+                            <a
+                                key={link}
+                                href="#"
                                 className="text-gray-600 hover:text-indigo-600 transition-colors"
                             >
                                 {link}
@@ -66,22 +66,22 @@ const HomePage = () => {
                         ))}
                         <div>
                             {isAuthenticated ? (
-                                <button 
-                                    onClick={handleSignOut} 
+                                <button
+                                    onClick={handleSignOut}
                                     className="px-2 py-[2px] text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors"
                                 >
                                     Sign Out
                                 </button>
                             ) : (
                                 <>
-                                    <a 
-                                        href="/signin" 
+                                    <a
+                                        href="/signin"
                                         className="px-4 py-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
                                     >
                                         Sign In
                                     </a>
-                                    <a 
-                                        href="/signup" 
+                                    <a
+                                        href="/signup"
                                         className="px-4 py-2 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors"
                                     >
                                         Sign Up
@@ -106,8 +106,8 @@ const HomePage = () => {
             {/* Features Grid */}
             <main className="container mx-auto px-6 grid md:grid-cols-2 gap-8 -mt-12">
                 {features.map((feature, index) => (
-                    <div 
-                        key={index} 
+                    <div
+                        key={index}
                         className="bg-white rounded-2xl p-8 text-center shadow-lg hover:shadow-xl transition-all group"
                     >
                         {feature.icon}
@@ -117,38 +117,42 @@ const HomePage = () => {
                         <p className="text-gray-600 mb-6">
                             {feature.description}
                         </p>
-                        {isAuthenticated?(
-                            <button 
-                            onClick={feature.action}
-                            className="px-6 py-3 bg-blue-500 text-white rounded-lg 
+                        {isAuthenticated ? (
+                            <button
+                                onClick={feature.action}
+                                className="px-6 py-3 bg-blue-500 text-white rounded-lg 
                                 hover:bg-blue-600 transition-colors group-hover:scale-105"
-                        >
-                            Detect Now
-                        </button>
-                        ):(
-                            <button 
-                            onClick={handleButtonSignin}
-                            className="px-6 py-3 bg-blue-500 text-white rounded-lg 
+                            >
+                                Detect Now
+                            </button>
+                        ) : (
+                            <button
+                                onClick={handleButtonSignin}
+                                className="px-6 py-3 bg-blue-500 text-white rounded-lg 
                                 hover:bg-blue-600 transition-colors group-hover:scale-105"
-                        >
-                            Detect Now
-                        </button>
-                        )};
-                        
+                            >
+                                Detect Now
+                            </button>
+                        )}
+
                     </div>
                 ))}
             </main>
 
+
             {/* Footer */}
-            <footer className="mt-16 bg-gray-900 text-white py-12">
+            <footer className="mt-16 bg-gradient-to-br from-blue-500 to-blue-200 py-12 border-t-4 border-white rounded-t-3xl shadow-lg">
                 <div className="container mx-auto px-6 text-center">
-                    <p className="text-gray-400">© 2025 Fake Buster. Protecting Truth in the Digital Age.</p>
-                    <div className="mt-6 flex justify-center space-x-6">
+                    <p className="text-gray-800 text-lg font-semibold tracking-wide">
+                        © 2025 <span className="font-bold text-indigo-700">Fake Buster</span>. Protecting Truth in the Digital Age.
+                    </p>
+
+                    <div className="mt-6 flex justify-center space-x-8">
                         {['Privacy', 'Terms', 'Contact'].map(link => (
-                            <a 
-                                key={link} 
-                                href="#" 
-                                className="text-gray-500 hover:text-white transition-colors"
+                            <a
+                                key={link}
+                                href="#"
+                                className="text-gray-700 hover:text-indigo-600 font-medium transition-all duration-300 transform hover:scale-105 hover:shadow-md px-2 py-1 rounded-md"
                             >
                                 {link}
                             </a>
