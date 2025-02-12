@@ -16,7 +16,7 @@ const HomePage = () => {
         return () => unsubscribe(); // Cleanup on unmount
     }, [auth]);
 
-    // Handle logout
+    // Handling Logout after user clicks logout and its redirection
     const handleSignOut = async () => {
         try {
             await signOut(auth);
